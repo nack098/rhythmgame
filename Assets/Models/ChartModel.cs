@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Models.Data;
+using Models.Interface;
 using Services.Interface;
 using UnityEngine;
 
@@ -10,8 +11,8 @@ namespace Models {
         readonly private Dictionary<int, List<NoteData>> _noteData = new Dictionary<int, List<NoteData>>();
         readonly private IDataService _dataService;
         
-        private Action<int, List<NoteData>> _onNoteDataAdded;
-        private Action<List<NoteData>> _onNoteDataRemoved;
+        public Action<int, List<NoteData>> OnNoteDataAdded;
+        public Action<List<NoteData>> OnNoteDataRemoved;
 
         public ChartModel(IDataService dataService) {
             _dataService = dataService;
@@ -22,8 +23,7 @@ namespace Models {
                 _noteData[showTime] = new List<NoteData>();
             }
             _noteData[showTime].Add(noteData);
-
-            _onNoteDataAdded?.Invoke(showTime, _noteData[showTime]);
+            OnNoteDataAdded?.Invoke(showTime, _noteData[showTime]);
         }
 
         /// <summary>
@@ -33,6 +33,12 @@ namespace Models {
         /// <param name="difficulty"></param>
         public void LoadData(string location) {
             string fileData = _dataService.GetData<string>(Path.Combine(Application.dataPath, location));
+            AddNoteData(0, new NoteData(NoteType.Bpm, 0, 160, 0, 0));
+            AddNoteData(0, new NoteData(NoteType.Single, 0, 1, 0, 3));
+            AddNoteData(0, new NoteData(NoteType.Single, 10, 1, 0, 3));
+            AddNoteData(0, new NoteData(NoteType.Single, 15, 1, 0, 3));
+            AddNoteData(0, new NoteData(NoteType.Single, 20, 1, 0, 3));
+            AddNoteData(0, new NoteData(NoteType.Single, 25, 1, 0, 3));
         }
 
         /// <summary>
@@ -57,18 +63,10 @@ namespace Models {
                 List<NoteData> noteData = _noteData[timeInMiliseconds];
                 _noteData.Remove(timeInMiliseconds);
 
-                _onNoteDataRemoved?.Invoke(noteData);
+                OnNoteDataRemoved?.Invoke(noteData);
                 return noteData;
             }
             return null; 
-        }
-
-        public void BindOnNoteDataAdded(Action<int, List<NoteData>> action) {
-            _onNoteDataAdded += action;
-        }
-
-        public void BindOnNoteDataRemoved(Action<List<NoteData>> action) {
-            _onNoteDataRemoved += action;
         }
     }
 }

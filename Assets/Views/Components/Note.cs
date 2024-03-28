@@ -3,14 +3,13 @@ using UnityEngine;
 namespace Views.Components {
     public class Note : MonoBehaviour {
         public float NoteSpeed;
-        public float BPM;
         public int HitTime;
 
-        private void Update() {
-            this.transform.Translate(this._currentSpeed() * Time.deltaTime * Vector3.down);
+        public void UpdateNote(float bpm) {
+            this.transform.Translate(this._currentSpeed(bpm) * Time.deltaTime * Vector3.down);
         }
-        private float _currentSpeed() {
-            return (1/BPM)*(1/60)* NoteSpeed;
+        private float _currentSpeed(float bpm) {
+            return (1/bpm) * 60 * 1000 * NoteSpeed;
         }
     }
 }

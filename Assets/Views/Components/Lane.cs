@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Views.Components {
     public class Lane : MonoBehaviour {
         public List<Note> Notes = new List<Note>();
+        public SettingsData Settings;
         public GameObject NotePrefab;
         public GameObject SpawnPoint;
 
@@ -15,13 +16,12 @@ namespace Views.Components {
             GameObject note = Instantiate(NotePrefab, SpawnPoint.transform);
             Note data = note.GetComponent<Note>();
             data.HitTime = noteData.HitTime;
-            data.NoteSpeed = noteData.NoteSpeed;
+            data.NoteSpeed = noteData.NoteSpeed * Settings.Speed / 100;
             Notes.Add(data);
         }
-
-        public void SetNoteSpeed(float speed) {
+        public void BpmChange(float bpm) {
             foreach (Note note in Notes) {
-                note.NoteSpeed = speed;
+                note.UpdateNote(bpm);
             }
         }
     }

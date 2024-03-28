@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Models.Data;
+using Models.Interface;
 using UnityEngine;
 using Views.Components;
 
@@ -11,16 +12,19 @@ namespace Views {
             lanes = GetComponentsInChildren<Lane>();
         }
 
-        public void Render(List<NoteData> notes) {
+        public void Render(float bpm) {
+            foreach (Lane lane in lanes) {
+                lane.BpmChange(bpm);
+            }
         }
 
-        public void SetLaneBpm(float bpm) {
-        }
-
-        public void Hit(int laneIndex) {
-        }
-
-        public void Remove(int laneIndex) {
+        public void CreateNote(List<NoteData> notes) {
+            foreach (NoteData note in notes) {
+                if (note.Type == NoteType.Bpm) {
+                    continue;
+                }
+                lanes[note.Lane].RenderNote(note);
+            }
         }
     }
 }

@@ -1,15 +1,16 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 using Models;
 using Models.Data;
+
+using Views;
+
+using Models.Interface;
 using Services.Factory;
 using Services.Interface;
-using System.Collections.Generic;
-using System.Linq;
-using Views;
-using Models.Interface;
 
-namespace Controller {
+namespace Controllers {
     public class GamePlayController : MonoBehaviour {
 
         [Header("System Configuration")]
@@ -24,13 +25,18 @@ namespace Controller {
         [SerializeField] private ChartView _chartView;
 
         private int _gameTime = 0;
+        private float _currentBpm = 0;
+        private float _bpmInterval = 0;
+        private int _bpmChangeEnd = 0;
 
         private void Awake() {
             IDataService dataService = DataServiceFactory.GetDataService(_serviceLocation);
             _chartModel = new ChartModel(dataService);
             _settingsModel = new SettingsModel(_settingsData);
 
-            _chartModel.BindOnNoteDataRemoved(_chartView.Render);
+            _chartModel.OnNoteDataRemoved += (notes) => {
+                _chartView.CreateNote(notes);
+            };
         }
 
         private void Start() {
@@ -38,14 +44,40 @@ namespace Controller {
         }
         
         private void FixedUpdate() {
+            _updateNoteData();
+            _updateBpm();
             _gameTime++;
-            foreach (NoteData note in _chartModel.GetAndRemoveNoteData(_gameTime)) {
+        }
+
+        private void Update() {
+            _chartView.Render(_currentBpm);
+        }
+
+        private void _updateNoteData() {
+            List<NoteData> notes = _chartModel.GetAndRemoveNoteData(_gameTime);
+            if (notes == null) return;
+            foreach (NoteData note in notes) {
                 if (note.Type == NoteType.Bpm) {
-                    _chartView.SetLaneBpm(note.NoteSpeed);
+                    _bpmChangeEnd = note.EndTime;
+                    if (note.EndTime - note.HitTime == 0) {
+                        this._currentBpm = note.NoteSpeed;
+                    }else {
+                        this._bpmInterval = note.NoteSpeed / (note.EndTime - note.HitTime);
+                        this._bpmChangeEnd = note.EndTime;
+                    }
+                    continue;
                 }
-                if (note.HitTime == _gameTime) {
-                    _chartView.Hit(note.Lane);
-                }
+            }
+        }
+
+        private void _updateBpm() {
+            if (this._gameTime == this._bpmChangeEnd)  {
+                this._bpmChangeEnd = 0;
+                this._bpmInterval = 0;
+            }
+            
+            if (this._bpmInterval != 0) {
+                this._currentBpm += this._bpmInterval;
             }
         }
     }
