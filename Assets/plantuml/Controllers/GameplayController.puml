@@ -1,0 +1,31 @@
+@startuml
+class GamePlayController {
+    - PerfectThreshold : int
+    - GreatThreshold : int
+    - MissThreshold : int
+    - _gameTime : int
+    - _currentBpm : float = 0
+    - _combo : int = 0
+    - _perfect : int = 0
+    - _great : int = 0
+    - _miss : int = 0
+    - Awake() : void
+    - Start() : void
+    - FixedUpdate() : void
+    - _updateNoteData() : void
+    - _enableInputActions() : void
+    - _checkNoteHit(lane:int) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GamePlayController
+GamePlayController --> "_settingsData" SettingsData
+GamePlayController --> "_serviceLocation" Location
+GamePlayController --> "inputActions" InputActionAsset
+GamePlayController --> "metaData" MetaData
+GamePlayController --> "_chartModel" ChartModel
+GamePlayController --> "_chartView" ChartView
+GamePlayController --> "_audioSource" AudioSource
+GamePlayController o-> "_noteData<int,List<NoteData>>" "Dictionary`2"
+GamePlayController --> "_dataService" IDataService
+@enduml

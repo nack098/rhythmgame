@@ -1,0 +1,22 @@
+@startuml
+class WavUtility {
+    <<const>> - BlockSize_16Bit : int = 2
+    + {static} ToAudioClip(filePath:string) : AudioClip
+    + {static} ToAudioClip(fileBytes:byte[], offsetSamples:int, name:string) : AudioClip
+    - {static} Convert8BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert16BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert24BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert32BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    + {static} FromAudioClip(audioClip:AudioClip) : byte[]
+    + {static} FromAudioClip(audioClip:AudioClip, filepath:string, saveAsFile:bool, dirname:string) : byte[]
+    - {static} WriteFileHeader(stream:MemoryStream, fileSize:int) : int
+    - {static} WriteFileFormat(stream:MemoryStream, channels:int, sampleRate:int, bitDepth:UInt16) : int
+    - {static} WriteFileData(stream:MemoryStream, audioClip:AudioClip, bitDepth:UInt16) : int
+    - {static} ConvertAudioClipDataToInt16ByteArray(data:float[]) : byte[]
+    - {static} WriteBytesToMemoryStream(stream:MemoryStream, bytes:byte[], tag:string) : int
+    + {static} BitDepth(audioClip:AudioClip) : UInt16
+    - {static} BytesPerSample(bitDepth:UInt16) : int
+    - {static} BlockSize(bitDepth:UInt16) : int
+    - {static} FormatCode(code:UInt16) : string
+}
+@enduml

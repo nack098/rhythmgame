@@ -1,0 +1,6 @@
+@startuml
+interface IDataService {
+    + GetData(path:string) : T
+    + Save(data:T, path:string) : void
+}
+@enduml

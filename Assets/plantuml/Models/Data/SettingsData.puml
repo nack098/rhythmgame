@@ -1,0 +1,9 @@
+@startuml
+class SettingsData {
+    + MusicVolume : float
+    + SFXVolume : float
+    + Speed : float
+    + Offset : int
+}
+ScriptableObject <|-- SettingsData
+@enduml

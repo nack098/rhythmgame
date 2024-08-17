@@ -1,0 +1,13 @@
+@startuml
+class Lane {
+    + Duarion : float
+    - _triggered : bool = false
+    - Update() : void
+    + Trigger() : void
+}
+MonoBehaviour <|-- Lane
+Lane --> "SpawnPoint" GameObject
+Lane --> "Bg" GameObject
+Lane --> "DefaultColor" Color
+Lane --> "TriggeredColor" Color
+@enduml

@@ -1,14 +1,15 @@
 using System;
+using UnityEngine;
 
 namespace Models.Data {
-    [Serializable]
-    public struct MetaData {
+    [CreateAssetMenu(fileName = "MetaData", menuName = "Data/MetaData")]
+    public class MetaData: ScriptableObject {
         public string BPM;
         public string Title;
         public string Artist;
         public string Background;
-        public string MusicPath;
+        public AudioClip Music;
         public string Difficulty;
-        public string FilePath;
+        public string ChartPath;
     }
 }

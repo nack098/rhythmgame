@@ -22,7 +22,7 @@ namespace Models {
             set => _settingsData.Speed = value;
         }
 
-        public float Offset {
+        public int Offset {
             get => _settingsData.Offset;
             set => _settingsData.Offset = value;
         }

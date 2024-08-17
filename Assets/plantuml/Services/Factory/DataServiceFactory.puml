@@ -1,0 +1,5 @@
+@startuml
+class DataServiceFactory {
+    + {static} GetDataService(location:Location) : IDataService
+}
+@enduml

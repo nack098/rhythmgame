@@ -1,0 +1,6 @@
+@startuml
+enum Location {
+    FileSystem,
+    Server,
+}
+@enduml

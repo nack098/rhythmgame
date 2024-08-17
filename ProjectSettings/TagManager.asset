@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 4168840245
+    locked: 0
+  - name: LaneBackground
+    uniqueID: 288172713
+    locked: 0
+  - name: Chart Line
+    uniqueID: 3528022741
+    locked: 0
+  - name: Note
+    uniqueID: 3009745679
+    locked: 0

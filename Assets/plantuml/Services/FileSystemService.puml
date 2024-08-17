@@ -1,0 +1,7 @@
+@startuml
+class FileSystemService {
+    + GetData(path:string) : T
+    + Save(data:T, path:string) : void
+}
+IDataService <|-- FileSystemService
+@enduml

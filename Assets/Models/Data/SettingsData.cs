@@ -6,6 +6,6 @@ namespace Models.Data {
         public float MusicVolume;
         public float SFXVolume;
         public float Speed;
-        public float Offset;
+        public int Offset;
     }
 }

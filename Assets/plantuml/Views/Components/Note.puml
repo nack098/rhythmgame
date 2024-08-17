@@ -1,0 +1,10 @@
+@startuml
+class Note {
+    + ActualSpeed : float
+    - _currentSpeed(bpm:float) : float
+    + UpdateNote(bpm:float) : void
+    + RemoveNote() : void
+}
+MonoBehaviour <|-- Note
+Note --> "Data" NoteData
+@enduml

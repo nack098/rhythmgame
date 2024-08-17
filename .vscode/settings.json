@@ -57,5 +57,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "rhythmgame.sln"
+    "dotnet.defaultSolution": "rhythmgame.sln",
+    "files.readonlyInclude": {
+        "{**/.c4z/.extsrcs/*.PROTSYM.cbl,**/.c4z/.extsrcs/*.PROTSYM.listing}": true
+    }
 }

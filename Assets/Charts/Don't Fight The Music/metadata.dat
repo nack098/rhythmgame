@@ -1,0 +1,7 @@
+Title: Don't Fight Music
+BPM: 25.5-191
+Artist: xi
+AudioPath: ./song.wav
+Easy: "./easy.chart",4
+Normal: "./normal.chart",7
+Hard: "./hard.chart",10

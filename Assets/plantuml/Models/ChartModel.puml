@@ -1,0 +1,19 @@
+@startuml
+class ChartModel {
+    + ChartModel(dataService:IDataService)
+    + AddNoteData(showTime:int, noteData:NoteData) : void
+    + LoadData(location:string, SettingSpeed:float) : void
+    + GetNoteData(timeInMiliseconds:int) : List<NoteData>
+    + GetAndRemoveNoteData(timeInMiliseconds:int) : List<NoteData>
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "Action`2"<T1,T2> {
+}
+class "Action`1"<T> {
+}
+ChartModel o-> "_noteData<int,List<NoteData>>" "Dictionary`2"
+ChartModel --> "_dataService" IDataService
+ChartModel --> "OnNoteDataAdded<int,List<NoteData>>" "Action`2"
+ChartModel --> "OnNoteDataRemoved<List<NoteData>>" "Action`1"
+@enduml

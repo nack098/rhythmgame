@@ -1,0 +1,156 @@
+@startuml
+class GamePlayController {
+    - PerfectThreshold : int
+    - GreatThreshold : int
+    - MissThreshold : int
+    - _gameTime : int
+    - _currentBpm : float = 0
+    - _combo : int = 0
+    - _perfect : int = 0
+    - _great : int = 0
+    - _miss : int = 0
+    - Awake() : void
+    - Start() : void
+    - FixedUpdate() : void
+    - _updateNoteData() : void
+    - _enableInputActions() : void
+    - _checkNoteHit(lane:int) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GamePlayController
+GamePlayController --> "_settingsData" SettingsData
+GamePlayController --> "_serviceLocation" Location
+GamePlayController --> "inputActions" InputActionAsset
+GamePlayController --> "metaData" MetaData
+GamePlayController --> "_chartModel" ChartModel
+GamePlayController --> "_chartView" ChartView
+GamePlayController --> "_audioSource" AudioSource
+GamePlayController o-> "_noteData<int,List<NoteData>>" "Dictionary`2"
+GamePlayController --> "_dataService" IDataService
+class ChartModel {
+    + ChartModel(dataService:IDataService)
+    + AddNoteData(showTime:int, noteData:NoteData) : void
+    + LoadData(location:string, SettingSpeed:float) : void
+    + GetNoteData(timeInMiliseconds:int) : List<NoteData>
+    + GetAndRemoveNoteData(timeInMiliseconds:int) : List<NoteData>
+}
+class "Dictionary`2"<T1,T2> {
+}
+class "Action`2"<T1,T2> {
+}
+class "Action`1"<T> {
+}
+ChartModel o-> "_noteData<int,List<NoteData>>" "Dictionary`2"
+ChartModel --> "_dataService" IDataService
+ChartModel --> "OnNoteDataAdded<int,List<NoteData>>" "Action`2"
+ChartModel --> "OnNoteDataRemoved<List<NoteData>>" "Action`1"
+class SettingsModel {
+    + SettingsModel(settingsData:SettingsData)
+    + MusicVolume : float <<get>> <<set>>
+    + SFXVolume : float <<get>> <<set>>
+    + Speed : float <<get>> <<set>>
+    + Offset : int <<get>> <<set>>
+}
+SettingsModel --> "_settingsData" SettingsData
+class FileSystemService {
+    + GetData(path:string) : T
+    + Save(data:T, path:string) : void
+}
+IDataService <|-- FileSystemService
+class ChartView {
+    - Awake() : void
+    + Render(bpm:float) : void
+    + CreateNote(notesToShow:List<NoteData>) : void
+    + RemoveNotes(noteToRemove:NoteData) : void
+    + TriggerLane(lane:int) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- ChartView
+ChartView --> "NotePrefab" GameObject
+ChartView --> "Settings" SettingsData
+ChartView o-> "notes<Note>" "List`1"
+ChartView o-> "toBeRemoved<Note>" "List`1"
+class MetaData {
+    + BPM : string
+    + Title : string
+    + Artist : string
+    + Background : string
+    + Difficulty : string
+    + ChartPath : string
+}
+ScriptableObject <|-- MetaData
+MetaData --> "Music" AudioClip
+struct NoteData {
+    + HitTime : int
+    + NoteSpeed : float
+    + EndTime : int
+    + Lane : int
+    + NoteData(type:NoteType, hitTime:int, noteSpeed:float, endTime:int, lane:int)
+}
+NoteData --> "Type" NoteType
+class SettingsData {
+    + MusicVolume : float
+    + SFXVolume : float
+    + Speed : float
+    + Offset : int
+}
+ScriptableObject <|-- SettingsData
+enum NoteType {
+    Single= 0,
+    Hold= 1,
+    Flick= 2,
+    Bpm= 3,
+}
+class DataServiceFactory {
+    + {static} GetDataService(location:Location) : IDataService
+}
+interface IDataService {
+    + GetData(path:string) : T
+    + Save(data:T, path:string) : void
+}
+enum Location {
+    FileSystem,
+    Server,
+}
+class WavUtility {
+    <<const>> - BlockSize_16Bit : int = 2
+    + {static} ToAudioClip(filePath:string) : AudioClip
+    + {static} ToAudioClip(fileBytes:byte[], offsetSamples:int, name:string) : AudioClip
+    - {static} Convert8BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert16BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert24BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    - {static} Convert32BitByteArrayToAudioClipData(source:byte[], headerOffset:int, dataSize:int) : float[]
+    + {static} FromAudioClip(audioClip:AudioClip) : byte[]
+    + {static} FromAudioClip(audioClip:AudioClip, filepath:string, saveAsFile:bool, dirname:string) : byte[]
+    - {static} WriteFileHeader(stream:MemoryStream, fileSize:int) : int
+    - {static} WriteFileFormat(stream:MemoryStream, channels:int, sampleRate:int, bitDepth:UInt16) : int
+    - {static} WriteFileData(stream:MemoryStream, audioClip:AudioClip, bitDepth:UInt16) : int
+    - {static} ConvertAudioClipDataToInt16ByteArray(data:float[]) : byte[]
+    - {static} WriteBytesToMemoryStream(stream:MemoryStream, bytes:byte[], tag:string) : int
+    + {static} BitDepth(audioClip:AudioClip) : UInt16
+    - {static} BytesPerSample(bitDepth:UInt16) : int
+    - {static} BlockSize(bitDepth:UInt16) : int
+    - {static} FormatCode(code:UInt16) : string
+}
+class Lane {
+    + Duarion : float
+    - _triggered : bool = false
+    - Update() : void
+    + Trigger() : void
+}
+MonoBehaviour <|-- Lane
+Lane --> "SpawnPoint" GameObject
+Lane --> "Bg" GameObject
+Lane --> "DefaultColor" Color
+Lane --> "TriggeredColor" Color
+class Note {
+    + ActualSpeed : float
+    - _currentSpeed(bpm:float) : float
+    + UpdateNote(bpm:float) : void
+    + RemoveNote() : void
+}
+MonoBehaviour <|-- Note
+Note --> "Data" NoteData
+@enduml

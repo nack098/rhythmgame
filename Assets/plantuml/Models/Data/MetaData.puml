@@ -1,0 +1,12 @@
+@startuml
+class MetaData {
+    + BPM : string
+    + Title : string
+    + Artist : string
+    + Background : string
+    + Difficulty : string
+    + ChartPath : string
+}
+ScriptableObject <|-- MetaData
+MetaData --> "Music" AudioClip
+@enduml

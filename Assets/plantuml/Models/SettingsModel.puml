@@ -1,0 +1,10 @@
+@startuml
+class SettingsModel {
+    + SettingsModel(settingsData:SettingsData)
+    + MusicVolume : float <<get>> <<set>>
+    + SFXVolume : float <<get>> <<set>>
+    + Speed : float <<get>> <<set>>
+    + Offset : int <<get>> <<set>>
+}
+SettingsModel --> "_settingsData" SettingsData
+@enduml

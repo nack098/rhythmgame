@@ -1,0 +1,10 @@
+@startuml
+struct NoteData {
+    + HitTime : int
+    + NoteSpeed : float
+    + EndTime : int
+    + Lane : int
+    + NoteData(type:NoteType, hitTime:int, noteSpeed:float, endTime:int, lane:int)
+}
+NoteData --> "Type" NoteType
+@enduml

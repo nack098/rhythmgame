@@ -29,16 +29,41 @@ namespace Models {
         /// <summary>
         /// Load Data From Location
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="difficulty"></param>
-        public void LoadData(string location) {
+        /// <param name="location">the location of a file</param>
+        public void LoadData(string location, float SettingSpeed = 0) {
             string fileData = _dataService.GetData<string>(Path.Combine(Application.dataPath, location));
-            AddNoteData(0, new NoteData(NoteType.Bpm, 0, 160, 0, 0));
-            AddNoteData(0, new NoteData(NoteType.Single, 0, 1, 0, 3));
-            AddNoteData(0, new NoteData(NoteType.Single, 10, 1, 0, 3));
-            AddNoteData(0, new NoteData(NoteType.Single, 15, 1, 0, 3));
-            AddNoteData(0, new NoteData(NoteType.Single, 20, 1, 0, 3));
-            AddNoteData(0, new NoteData(NoteType.Single, 25, 1, 0, 3));
+            string[] lines = fileData.Split('\n');
+            float bpm = 0;
+            foreach (string line in lines) {
+                string[] data = line.Split(',');
+                int lane = int.Parse(data[4]);
+                int hitTime = int.Parse(data[0]);
+                int endTime = int.Parse(data[3]);
+                float noteSpeed = float.Parse(data[2]);
+                NoteType type = (NoteType) Enum.Parse(typeof(NoteType), data[1]);
+
+                if (type == NoteType.Bpm) {
+                    bpm = noteSpeed;
+                }
+                if (bpm == 0 || SettingSpeed == 0) {
+                    AddNoteData(hitTime, new NoteData {
+                        Lane = lane,
+                        HitTime = hitTime,
+                        EndTime = endTime,
+                        NoteSpeed = noteSpeed,
+                        Type = type 
+                    });
+                }else {
+                    float speed = bpm * noteSpeed * SettingSpeed / 100;
+                    AddNoteData(hitTime - (int) (34000 / speed), new NoteData {
+                        Lane = lane,
+                        HitTime = hitTime,
+                        EndTime = endTime,
+                        NoteSpeed = noteSpeed,
+                        Type = type 
+                    });
+                }
+            }
         }
 
         /// <summary>

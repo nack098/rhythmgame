@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MusicVolume: 50
   SFXVolume: 10
-  Speed: 5
-  Offset: 0
+  Speed: 25
+  Offset: -20

@@ -1,0 +1,16 @@
+@startuml
+class ChartView {
+    - Awake() : void
+    + Render(bpm:float) : void
+    + CreateNote(notesToShow:List<NoteData>) : void
+    + RemoveNotes(noteToRemove:NoteData) : void
+    + TriggerLane(lane:int) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- ChartView
+ChartView --> "NotePrefab" GameObject
+ChartView --> "Settings" SettingsData
+ChartView o-> "notes<Note>" "List`1"
+ChartView o-> "toBeRemoved<Note>" "List`1"
+@enduml
